@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo/utils/dialog_box.dart';
 import 'package:todo/utils/todo_tile.dart';
 
 class HomePage extends StatefulWidget {
@@ -9,6 +10,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _controller = TextEditingController();
   List toDoLists = [
     ["Make Tutorial", false],
     ["Do Exercises", true],
@@ -21,10 +23,22 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void createNewTast() {
-    showDialog(context: context, builder: (context) => const AlertDialog(
-      
-    ));
+  void saveTask() {
+    setState(() {
+      toDoLists.add([_controller.text, false]);
+      _controller.clear();
+    });
+    Navigator.of(context).pop();
+  }
+
+  void addNewTask() {
+    showDialog(
+        context: context,
+        builder: (context) => DialogBox(
+              textController: _controller,
+              onCancel: () => Navigator.of(context).pop(),
+              onSave: saveTask,
+            ));
   }
 
   @override
@@ -40,7 +54,7 @@ class _HomePageState extends State<HomePage> {
           )),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: createNewTast,
+          onPressed: addNewTask,
           child: const Icon(Icons.add),
         ),
         body: Padding(
